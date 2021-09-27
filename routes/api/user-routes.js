@@ -17,12 +17,12 @@ router.route('/').get(getUsers).post(createUser);
 // GET single user by its _id and populated thought and friend data
 // PUT to update user by its _id
 // DELETE to remove user by its id
-router.route('/:userId').get(getSingleUser).put(updateUser).delete(deleteUser)
+router.route('/:id').get(getSingleUser).put(updateUser).delete(deleteUser)
 
 // for /api/users/:userId/friends/:friendId
 // POST to add a new friend to a user's friend list
 // DELETE to remove a friend from a user's friend list
-router.route(':userId/friends/:friendId').post(addFriend).delete(deleteFriend);
+router.route('/:userId/friends/:friendId').post(addFriend).delete(deleteFriend);
 
 // BONUS: remove user's associated thoughts when deleted
 
