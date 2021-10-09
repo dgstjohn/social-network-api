@@ -26,7 +26,7 @@ const thoughtController = {
         Thought.create(body)
             .then(({ _id }) => {
                 return User.findOneAndUpdate(
-                    { _id: params.userId },
+                    { _id: params.id },
                     { $push: { thoughts: _id } },
                     { new: true }
                 );
@@ -57,7 +57,7 @@ const thoughtController = {
     // add reaction to thought
     addReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
+            { _id: params.id },
             { $push: { replies: body } },
             { new: true, runValidators: true }
         )
@@ -73,18 +73,19 @@ const thoughtController = {
 
     // remove thought
     deleteThought({ params }, res) {
-        Tbought.findOneAndDelete({ _id: params.thoughtId })
+        Thought.findOneAndDelete({ _id: params.id })
             .then(deletedThought => {
                 if (!deletedThought) {
                     return res.status(404).json({ message: 'No thought with this id!' });
                 }
                 return User.findOneAndUpdate(
-                    { _id: params.userId },
-                    { $pull: { comments: params.thoughtId } },
+                    { _id: params.id },
+                    { $pull: { comments: params.id } },
                     { new: true }
                 );
             })
             .then(dbUserData => {
+                console.log(dbUserData);
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user found with this id!' });
                     return;
@@ -96,8 +97,8 @@ const thoughtController = {
     // remove reaction
     deleteReaction({ params }, res) {
         Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
-            { $pull: { replies: { replyId: params.replyId } } },
+            { _id: params.id },
+            { $pull: { replies: { replyId: params.id } } },
             { new: true }
         )
             .then(dbUserData => res.json(dbUserData))
